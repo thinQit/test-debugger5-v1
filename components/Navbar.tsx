@@ -1,99 +1,100 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useState } from "react";
-import { Menu, X, Wheat } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import Link from "next/link"
+import { useState } from "react"
+import { Menu, X, Phone, CalendarDays } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
-interface NavLink {
-  label: string;
-  href: string;
-}
+// Match props from layout: logo, navItems, ctaLabel, ctaHref
 interface NavbarProps {
-  logo: string;
-  navItems: NavLink[];
-  ctaLabel: string;
-  ctaHref: string;
+  logo: string
+  navItems: { label: string; href: string }[]
+  ctaLabel?: string
+  ctaHref?: string
 }
-
-// COLORS token mapping
-const textPrimary = "text-primary";
-const bgPrimary = "bg-primary";
-const hoverBgPrimary = "hover:bg-primary/90";
-const textAccent = "text-accent";
-const bgBackgroundBlur = "bg-background/90 backdrop-blur";
 
 export default function Navbar({
   logo = "Sunrise Bakery",
   navItems = [],
-  ctaLabel = "Reserve",
-  ctaHref = "/reservations",
+  ctaLabel = "Order Pickup",
+  ctaHref = "/menu#order",
 }: NavbarProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 transition-colors">
-      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 md:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2">
-          <Wheat className={`h-6 w-6 ${textPrimary}`} />
-          <span className={`font-serif text-xl font-bold ${textPrimary}`}>{logo}</span>
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
+      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-6">
+        <Link
+          href="/"
+          className="font-heading text-2xl font-bold text-primary"
+        >
+          {logo}
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
           {navItems.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
-              className="font-sans text-sm text-foreground/85 hover:text-primary transition-colors"
+              className="font-body text-sm text-muted-foreground transition-colors hover:text-primary"
             >
               {link.label}
             </Link>
           ))}
-          <Button className={`${bgPrimary} text-primary-foreground ${hoverBgPrimary}`}>
-            <Link href={ctaHref}>{ctaLabel}</Link>
+        </div>
+
+        <div className="hidden items-center gap-3 md:flex">
+          {ctaLabel && ctaHref && (
+            <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+              <Link href={ctaHref}>{ctaLabel}</Link>
+            </Button>
+          )}
+          <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Link href="/reservations">Reserve</Link>
           </Button>
         </div>
 
         <button
-          aria-label={open ? "Close menu" : "Open menu"}
-          className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-md"
-          onClick={() => setOpen((prev) => !prev)}
-          type="button"
+          aria-label="Toggle menu"
+          onClick={() => setOpen(!open)}
+          className="rounded-md p-2 text-primary md:hidden"
         >
-          {open ? (
-            <X className={`h-6 w-6 ${textPrimary}`} />
-          ) : (
-            <Menu className={`h-6 w-6 ${textPrimary}`} />
-          )}
+          {open ? <X size={22} /> : <Menu size={22} />}
         </button>
       </nav>
 
       <div
         className={cn(
-          "md:hidden overflow-hidden border-t border-border/60 bg-background transition-all duration-300",
-          open ? "max-h-96" : "max-h-0"
+          "border-t border-border bg-background p-4 md:hidden transition-all",
+          open ? "block" : "hidden"
         )}
       >
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4">
+        <div className="flex flex-col gap-3">
           {navItems.map((link) => (
             <Link
-              key={link.href}
+              key={link.label}
               href={link.href}
-              className="font-sans text-base text-foreground/85 hover:text-primary"
+              className="rounded-md px-2 py-2 font-body text-muted-foreground transition-colors hover:bg-accent/20 hover:text-primary"
               onClick={() => setOpen(false)}
             >
               {link.label}
             </Link>
           ))}
-          <Button
-            className={`w-full ${bgPrimary} text-primary-foreground ${hoverBgPrimary}`}
-            onClick={() => setOpen(false)}
-          >
-            <Link href={ctaHref}>{ctaLabel}</Link>
-          </Button>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+              <Link href={ctaHref} onClick={() => setOpen(false)}>
+                <Phone className="mr-2 h-4 w-4" /> {ctaLabel}
+              </Link>
+            </Button>
+            <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <Link href="/reservations" onClick={() => setOpen(false)}>
+                <CalendarDays className="mr-2 h-4 w-4" /> Reserve
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
-  );
+  )
 }

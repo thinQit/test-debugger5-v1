@@ -1,26 +1,19 @@
-import type { Metadata } from "next"
-import { Playfair_Display, Lato } from "next/font/google"
 import "./globals.css"
+import { Playfair_Display, Lato } from "next/font/google"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "700"],
-  variable: "--font-heading",
+  variable: "--font-playfair",
 })
 
 const lato = Lato({
   subsets: ["latin"],
   weight: ["300", "400", "700"],
-  variable: "--font-body",
+  variable: "--font-lato",
 })
-
-export const metadata: Metadata = {
-  title: "Sunrise Bakery | Sourdough & French Pastries in Downtown Portland",
-  description:
-    "Sunrise Bakery is a cozy artisan bakery in downtown Portland specializing in naturally leavened sourdough and French pastries. Dine-in, takeout, and catering available.",
-}
 
 export default function RootLayout({
   children,
@@ -36,26 +29,23 @@ export default function RootLayout({
             { label: "Home", href: "/" },
             { label: "Menu", href: "/menu" },
             { label: "Reservations", href: "/reservations" },
-            { label: "Catering", href: "/catering" },
             { label: "About", href: "/about" },
+            { label: "Gallery", href: "/gallery" },
             { label: "Contact", href: "/contact" },
           ]}
-          ctaLabel="Reserve"
-          ctaHref="/reservations"
+          ctaLabel="Order Pickup"
+          ctaHref="/menu#order"
         />
         {children}
         <Footer
           brand="Sunrise Bakery"
-          description="Sourdough, viennoiserie, and seasonal pastries—baked fresh for downtown Portland."
+          description="Sourdough, croissants, and coffee—made fresh in downtown Portland."
           columns={[
             {
               title: "Visit",
               links: [
-                {
-                  label: "1123 SW Alder St, Portland, OR 97205",
-                  href: "https://maps.google.com/?q=1123%20SW%20Alder%20St%2C%20Portland%2C%20OR%2097205",
-                },
-                { label: "(503) 555-0147", href: "tel:+15035550147" },
+                { label: "112 SW Alder St, Portland, OR", href: "https://maps.google.com/?q=112%20SW%20Alder%20St%2C%20Portland%2C%20OR%2097204" },
+                { label: "(503) 555-0198", href: "tel:+15035550198" },
                 { label: "hello@sunrisebakerypdx.com", href: "mailto:hello@sunrisebakerypdx.com" },
               ],
             },
@@ -63,16 +53,17 @@ export default function RootLayout({
               title: "Explore",
               links: [
                 { label: "Menu", href: "/menu" },
-                { label: "Reservations", href: "/reservations" },
-                { label: "Catering", href: "/catering" },
                 { label: "About", href: "/about" },
+                { label: "Gallery", href: "/gallery" },
+                { label: "Contact", href: "/contact" },
               ],
             },
             {
               title: "Hours",
               links: [
-                { label: "Mon–Fri: 7:00am–3:00pm", href: "/contact" },
-                { label: "Sat–Sun: 8:00am–4:00pm", href: "/contact" },
+                { label: "Mon–Fri: 7:00 AM – 3:00 PM", href: "/contact#hours" },
+                { label: "Sat: 8:00 AM – 3:00 PM", href: "/contact#hours" },
+                { label: "Sun: 8:00 AM – 2:00 PM", href: "/contact#hours" },
               ],
             },
           ]}

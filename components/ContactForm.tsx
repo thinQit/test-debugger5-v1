@@ -1,41 +1,41 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Select from "@/components/ui/select";
-import Textarea from "@/components/ui/textarea";
+import { useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
-interface ContactFormProps {
-  apiRoute?: string;
-}
+export default function ContactForm() {
+  const [form, setForm] = useState({ name: '', email: '', intent: 'general', message: '' })
+  const [status, setStatus] = useState('')
 
-export default function ContactForm({ apiRoute = "/api/contact" }: Partial<ContactFormProps>) {
-  const [loading, setLoading] = useState(false);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.name || !form.email || !form.message) return setStatus('Please complete all required fields.')
+    const res = await fetch('/api/contact', { method: 'POST', body: JSON.stringify(form) })
+    setStatus(res.ok ? 'Message sent successfully!' : 'Something went wrong.')
+  }
 
   return (
-    <form
-      className="space-y-4 rounded-xl border bg-card p-6 shadow-md"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        const fd = new FormData(e.currentTarget);
-        await fetch(apiRoute, { method: "POST", body: JSON.stringify(Object.fromEntries(fd.entries())) });
-        setLoading(false);
-      }}
-    >
-      <Input name="name" required placeholder="Your name" />
-      <Input name="email" required type="email" placeholder="Email address" />
-      <Select name="topic" defaultValue="General Inquiry">
-        <option>General Inquiry</option>
-        <option>Private Events</option>
-        <option>Catering</option>
-        <option>Press</option>
-      </Select>
-      <Textarea name="message" required placeholder="How can we help?" />
-      <Button type="submit" disabled={loading} className="bg-[#722F37] text-white">
-        {loading ? "Sending..." : "Send Message"}
-      </Button>
+    <form onSubmit={submit} className="space-y-4 rounded-xl bg-white p-6 shadow-md">
+      <Input placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+      <Input type="email" placeholder="Email address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+      <select
+        value={form.intent}
+        onChange={(e) => setForm({ ...form, intent: e.target.value })}
+        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+      >
+        <option value="general">General Inquiry</option>
+        <option value="catering">Catering</option>
+        <option value="private-event">Private Event</option>
+      </select>
+      <textarea
+        placeholder="How can we help?"
+        value={form.message}
+        onChange={(e) => setForm({ ...form, message: e.target.value })}
+        className="min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+      />
+      <Button type="submit" className="bg-[#722F37] text-white hover:bg-[#5a242b]">Send Message</Button>
+      {status && <p className="text-sm text-[#606C38]">{status}</p>}
     </form>
-  );
+  )
 }

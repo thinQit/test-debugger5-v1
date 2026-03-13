@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/effects/3d-card-effect";
-import { ChefHat, UtensilsCrossed, Info, Sparkles, Globe, Shield, Star, Zap, Heart, Users, Truck, Coffee, Mail, ShieldCheck } from 'lucide-react';
+import { ChefHat, Flame, Leaf, Star, UtensilsCrossed, Wine, User, Image } from 'lucide-react';
 
 interface Feature {
   icon: string;
@@ -16,40 +16,37 @@ interface FeaturesCards3DProps {
   features: Feature[];
 }
 
-const iconMap: Record<string, React.ElementType> = { Users, Truck, Coffee, Mail, ShieldCheck, 
+const iconMap: Record<string, React.ElementType> = { User, Image, 
   ChefHat,
-  UtensilsCrossed,
-  Info,
-  Sparkles,
-  Globe,
-  Shield,
+  Flame,
+  Leaf,
   Star,
-  Zap,
-  Heart,
+  UtensilsCrossed,
+  Wine,
 };
 
 export default function FeaturesCards3D({
-  badge = "Discover Ember & Vine",
-  headline = "Experience Our Signature Dining Journey",
-  subheadline = "Explore our chef-led services, seasonal menu highlights, and the story behind our kitchen philosophy.",
+  badge = "Menu Highlights",
+  headline = "Crafted Plates, Bold Character",
+  subheadline = "Discover signature dishes built from seasonal produce, open-flame techniques, and refined presentation.",
   features = [
     {
-      icon: "ChefHat",
-      title: "Chef’s Tasting Service",
+      icon: "Flame",
+      title: "Wood-Fired Ribeye",
       description:
-        "A curated multi-course experience with optional wine pairing, designed nightly around peak seasonal ingredients.",
+        "Dry-aged ribeye with smoked butter and charred shallot, finished over open flame for deep, savory richness.",
     },
     {
-      icon: "UtensilsCrossed",
-      title: "Menu Highlights",
+      icon: "Leaf",
+      title: "Garden Harvest Risotto",
       description:
-        "Guest favorites include saffron seafood risotto, ember-roasted lamb, and warm pistachio cake with citrus cream.",
+        "Creamy arborio rice with roasted squash, wild mushrooms, and parmesan, layered with fresh herb oil.",
     },
     {
-      icon: "Info",
-      title: "Our Story",
+      icon: "Wine",
+      title: "Sommelier Pairings",
       description:
-        "Rooted in heritage recipes and modern craft, Ember & Vine blends hospitality, flavor, and atmosphere into every meal.",
+        "Curated wine flights selected nightly to complement each course and elevate every bite.",
     },
   ],
 }: Partial<FeaturesCards3DProps>) {
@@ -62,22 +59,24 @@ export default function FeaturesCards3D({
               {badge}
             </span>
           )}
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground md:text-4xl">{headline}</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">{headline}</h2>
           {subheadline && <p className="mt-4 text-lg text-muted-foreground">{subheadline}</p>}
         </div>
         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {features.map(function (feature, index) {
-            const Icon = iconMap[feature.icon] || Sparkles;
+            const Icon = iconMap[feature.icon] || Star;
             return (
-              <CardContainer key={index} className="inter-var" containerClassName="w-full">
-                <CardBody className="card-hover relative w-full h-auto rounded-xl p-6 border border-border bg-card text-card-foreground shadow-sm">
-                  <CardItem translateZ={50} className="mb-4 rounded-lg bg-primary/10 p-3 text-primary">
-                    {React.createElement(Icon, { className: "h-7 w-7" })}
+              <CardContainer key={index} className="inter-var">
+                <CardBody className="card-hover relative group/card border border-border w-auto h-auto rounded-xl p-6 bg-background">
+                  <CardItem translateZ="50" className="mb-4">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      {React.createElement(Icon, { className: "h-6 w-6" })}
+                    </div>
                   </CardItem>
-                  <CardItem translateZ={60} className="font-serif text-xl font-bold text-foreground">
+                  <CardItem translateZ="60" className="text-xl font-bold text-foreground">
                     {feature.title}
                   </CardItem>
-                  <CardItem as="p" translateZ={40} className="mt-2 text-sm text-muted-foreground">
+                  <CardItem as="p" translateZ="40" className="text-muted-foreground mt-2 text-sm">
                     {feature.description}
                   </CardItem>
                 </CardBody>

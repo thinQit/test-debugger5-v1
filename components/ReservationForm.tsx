@@ -1,46 +1,37 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Select from "@/components/ui/select";
+import { useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
-interface ReservationFormProps {
-  apiRoute?: string;
-}
+export default function ReservationForm() {
+  const [form, setForm] = useState({ name: '', date: '', time: '', partySize: '2' })
+  const [status, setStatus] = useState('')
 
-export default function ReservationForm({ apiRoute = "/api/reservation" }: Partial<ReservationFormProps>) {
-  const [loading, setLoading] = useState(false);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.name || !form.date || !form.time) return setStatus('Please fill in required fields.')
+    const res = await fetch('/api/reservations', { method: 'POST', body: JSON.stringify(form) })
+    setStatus(res.ok ? 'Reservation request sent!' : 'Unable to submit request.')
+  }
 
   return (
-    <form
-      id="reservation-form"
-      className="space-y-4 rounded-xl border bg-card p-6 shadow-md"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        const fd = new FormData(e.currentTarget);
-        await fetch(apiRoute, { method: "POST", body: JSON.stringify(Object.fromEntries(fd.entries())) });
-        setLoading(false);
-      }}
-    >
-      <Input name="name" required placeholder="Full name" />
-      <Input name="phone" required placeholder="Phone number" />
-      <div className="grid gap-4 md:grid-cols-2">
-        <Input name="date" type="date" required />
-        <Input name="time" type="time" required />
-      </div>
-      <Select name="partySize" defaultValue="2">
+    <form id="reservations" onSubmit={submit} className="space-y-4 rounded-xl bg-white p-6 shadow-md">
+      <Input placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+      <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+      <Input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} />
+      <select
+        value={form.partySize}
+        onChange={(e) => setForm({ ...form, partySize: e.target.value })}
+        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+      >
         <option value="1">1 guest</option>
         <option value="2">2 guests</option>
         <option value="4">4 guests</option>
         <option value="6">6 guests</option>
-        <option value="8">8 guests</option>
-        <option value="10">10 guests</option>
-      </Select>
-      <Button type="submit" disabled={loading} className="bg-[#722F37] text-white">
-        {loading ? "Submitting..." : "Request Reservation"}
-      </Button>
+      </select>
+      <Button type="submit" className="bg-[#722F37] text-white hover:bg-[#5a242b]">Request Reservation</Button>
+      {status && <p className="text-sm text-[#606C38]">{status}</p>}
     </form>
-  );
+  )
 }
